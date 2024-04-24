@@ -4,7 +4,7 @@ mod sbox;
 mod test;
 
 /// 标准流程
-pub fn encode(input: [u8; 16], key: Option<[[u8; 4]; 4]>) -> [u8; 16] {
+pub fn encrypt(input: [u8; 16], key: Option<[[u8; 4]; 4]>) -> [u8; 16] {
     let input = [
         [input[0], input[1], input[2], input[3]],
         [input[4], input[5], input[6], input[7]],
@@ -59,10 +59,10 @@ fn generate_aes_128_key() -> [[u8; 4]; 4] {
 /// 行位移，ShiftRows
 fn shift_rows(input: [[u8; 4]; 4]) -> [[u8; 4]; 4] {
     [
-        input[0],
-        [input[1][1], input[1][2], input[1][3], input[1][0]],
-        [input[2][2], input[2][3], input[2][0], input[2][1]],
-        [input[3][3], input[3][0], input[3][1], input[3][2]],
+        [input[0][0], input[1][1], input[2][2], input[3][3]],
+        [input[1][0], input[2][1], input[3][2], input[0][3]],
+        [input[2][0], input[3][1], input[0][2], input[1][3]],
+        [input[3][0], input[0][1], input[1][2], input[2][3]],
     ]
 }
 
@@ -85,7 +85,7 @@ fn mix_columns(input: [[u8; 4]; 4]) -> [[u8; 4]; 4] {
         output[3][index] = gmul(3, input[0][index])
             ^ gmul(1, input[1][index])
             ^ gmul(1, input[2][index])
-            ^ gmul(2, input[3][index]);
+            ^ gmul(2, input[3][index])
     }
     output
 }

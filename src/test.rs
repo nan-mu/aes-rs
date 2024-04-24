@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::encode;
+    use crate::encrypt;
 
     #[test]
     fn test_example() {
@@ -18,6 +18,6 @@ mod tests {
             0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb, 0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a,
             0x0b, 0x32,
         ];
-        println!("加密结果：{:?}", encode(input, Some(key)));
+        println!("加密结果：{:x?}", encrypt(input, Some(key)));
     }
 }
