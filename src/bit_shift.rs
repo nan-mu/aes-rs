@@ -17,19 +17,20 @@ pub fn rot_word(word: &[u8]) -> [u8; 4] {
 }
 
 /// 执行有限域GF(2^8)乘法
-fn gmul(mut a: u8, mut b: u8) -> u8 {
-    let mut p = 0u8;
-    let mut hi_bit_set;
-    for _counter in 0..8 {
-        if (b & 1) == 1 {
-            p ^= a;
+fn gmul(a: u8, b: u8) -> u8 {
+    let mut result = 0;
+    let mut b = b;
+
+    for i in 0..8 {
+        if a & (1 << i) != 0 {
+            result ^= b;
         }
-        hi_bit_set = a & 0x80;
-        a <<= 1;
-        if hi_bit_set == 0x80 {
-            a ^= 0x1b; /* x^8 + x^4 + x^3 + x + 1 */
+        let high_bit_set = b & 0x80 != 0;
+        b <<= 1;
+        if high_bit_set {
+            b ^= 0x1B; // 0x1B 是 AES 中用于乘法的固定值
         }
-        b >>= 1;
     }
-    p
+
+    result
 }
