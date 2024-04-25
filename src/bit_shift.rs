@@ -1,10 +1,10 @@
 /// 向量叉乘，使用有限域GF(2^8)乘法，将乘法结果放到第一个参数中
-pub fn gmul_times(input1: &[u8], input2: &[u8]) -> [u8; 4] {
+pub fn gmul_times(input1: &[u8], input2: &[u8]) -> u8 {
     assert_eq!(4 as usize, input1.len());
     assert_eq!(4 as usize, input2.len());
-    let mut output = [0; 4];
+    let mut output = 0;
     for index in 0..4 {
-        output[index] = gmul(input1[index], input2[index]);
+        output ^= gmul(input1[index], input2[index]);
     }
     output
 }

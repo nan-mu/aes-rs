@@ -57,13 +57,13 @@ fn mix_columns(input: &mut [u8]) {
     assert_eq!(input.len(), MIX_MATIX.len());
     let mut col = [0; 16];
     col.copy_from_slice(input);
-    for index in 0..4 {
-        let new_col = &bit_shift::gmul_times(
-            &col[(index * 4)..(index * 4 + 4)],
-            &MIX_MATIX[(index * 4)..(index * 4 + 4)],
-        );
-        let old_col = &mut input[(index * 4)..(index * 4 + 4)];
-        old_col.copy_from_slice(new_col);
+    for i in 0..4 {
+        for ii in 0..4 {
+            input[i * 4 + ii] = bit_shift::gmul_times(
+                &col[(i * 4)..(i * 4 + 4)],
+                &MIX_MATIX[(ii * 4)..(ii * 4 + 4)],
+            );
+        }
     }
     //期望04 66 81 e5 e0 cb 19 9a 48 f8 d3 7a 28 06 26 4c
     println!("MixColumns: {:02x?}", input);
