@@ -91,12 +91,19 @@ fn key_expansion(key: [u8; 16]) -> [[u8; 16]; 11] {
         let mut new_key = [0u8; 16];
         for ii in 0..4 {
             let orgin_word = &key[(ii * 4)..(ii * 4 + 4)]; // W[i - 4]
-            let mut pre_word = bit_shift::rot_word(last_word); // T(W[i-1])
-            sbox::encode(&mut pre_word);
+            let mut pre_word = [0u8; 4];
+            if ii == 0 {
+                pre_word = bit_shift::rot_word(last_word); // T(W[i-1])
+                sbox::encode(&mut pre_word);
+            } else {
+                pre_word.copy_from_slice(last_word);
+            }
             for iii in 0..4 {
                 new_key[ii * 4 + iii] = pre_word[iii] ^ orgin_word[iii]; // W[i]
             }
-            new_key[ii * 4] ^= RCON[i];
+            if ii == 0 {
+                new_key[ii * 4] ^= RCON[i];
+            }
             last_word = &new_key[(ii * 4)..(ii * 4 + 4)];
         }
         round_key[i] = new_key;
