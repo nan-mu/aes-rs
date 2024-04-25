@@ -39,13 +39,13 @@ const _INV_SBOX: [u8; 256] = [
 ];
 
 /// 将字符通过s核映射
-pub fn encode(input: &mut [u8]) {
+pub fn subcode(input: &mut [u8]) {
     // use log::debug;
-    println!("encode: {:x?}", input);
+    println!("encode: {:02x?}", input);
     for i in 0..input.len() {
         input[i] = SBOX[input[i] as usize];
     }
-    println!("encode: {:x?}", input);
+    println!("encode: {:02x?}", input);
 }
 
 /// 从s核映射中解码字符

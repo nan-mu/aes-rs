@@ -21,13 +21,13 @@ pub fn encrypt(input: [u8; 16], key: [u8; 16]) -> [u8; 16] {
 
     add_round_key(&mut input, &key[0]);
     for round in 1..10 {
-        sbox::encode(&mut input);
+        sbox::subcode(&mut input);
         shift_rows(&mut input);
         mix_columns(&mut input);
         add_round_key(&mut input, &key[round]);
     }
 
-    sbox::encode(&mut input);
+    sbox::subcode(&mut input);
     shift_rows(&mut input);
     add_round_key(&mut input, &key[10]);
 
@@ -36,7 +36,7 @@ pub fn encrypt(input: [u8; 16], key: [u8; 16]) -> [u8; 16] {
 
 /// 行位移，ShiftRows
 fn shift_rows(input: &mut [u8; 16]) {
-    println!("ShiftRows: {:x?}", input);
+    println!("ShiftRows: {:02x?}", input);
     // 替换规则
     //     0[0],  1[5],  2[10], 3[15],
     //     4[4],  5[9],  6[14], 7[3],
@@ -50,12 +50,12 @@ fn shift_rows(input: &mut [u8; 16]) {
     input.swap(7, 15); //15 is 7
     input.swap(9, 13); // 13 is 1
     input.swap(11, 15); // 15 is 11
-    println!("ShiftRows: {:x?}", input);
+    println!("ShiftRows: {:02x?}", input);
 }
 
 /// 列混合，MixColumns
 fn mix_columns(input: &mut [u8]) {
-    println!("MixColumns: {:x?}", input);
+    println!("MixColumns: {:02x?}", input);
     assert_eq!(input.len(), MIX_MATIX.len());
     let mut col = [0; 16];
     col.copy_from_slice(input);
@@ -67,7 +67,7 @@ fn mix_columns(input: &mut [u8]) {
         let old_col = &mut input[(index * 4)..(index * 4 + 4)];
         old_col.copy_from_slice(new_col);
     }
-    println!("MixColumns: {:x?}", input);
+    println!("MixColumns: {:02x?}", input);
 }
 
 /// 轮密钥加
@@ -77,7 +77,7 @@ fn add_round_key(input: &mut [u8], key: &[u8]) {
     for index in 0..input.len() {
         input[index] ^= key[index];
     }
-    println!("AddRoundKey: {:x?}", input);
+    println!("AddRoundKey: {:02x?}", input);
 }
 
 /// 密钥扩展
@@ -94,7 +94,7 @@ fn key_expansion(key: [u8; 16]) -> [[u8; 16]; 11] {
             let mut pre_word = [0u8; 4];
             if ii == 0 {
                 pre_word = bit_shift::rot_word(last_word); // T(W[i-1])
-                sbox::encode(&mut pre_word);
+                sbox::subcode(&mut pre_word);
             } else {
                 pre_word.copy_from_slice(last_word);
             }
