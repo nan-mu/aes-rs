@@ -2,6 +2,8 @@ mod bit_shift;
 mod sbox;
 mod test;
 
+// use log::debug;
+
 // 列混合使用的矩阵
 const MIX_MATIX: [u8; 16] = [
     0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x03, 0x01, 0x01, 0x02,
@@ -34,6 +36,7 @@ pub fn encrypt(input: [u8; 16], key: [u8; 16]) -> [u8; 16] {
 
 /// 行位移，ShiftRows
 fn shift_rows(input: &mut [u8; 16]) {
+    println!("ShiftRows: {:x?}", input);
     // 替换规则
     //     0[0],  1[5],  2[10], 3[15],
     //     4[4],  5[9],  6[14], 7[3],
@@ -47,10 +50,12 @@ fn shift_rows(input: &mut [u8; 16]) {
     input.swap(7, 15); //15 is 7
     input.swap(9, 13); // 13 is 1
     input.swap(11, 15); // 15 is 11
+    println!("ShiftRows: {:x?}", input);
 }
 
 /// 列混合，MixColumns
 fn mix_columns(input: &mut [u8]) {
+    println!("MixColumns: {:x?}", input);
     assert_eq!(input.len(), MIX_MATIX.len());
     let mut col = [0; 16];
     col.copy_from_slice(input);
@@ -62,14 +67,17 @@ fn mix_columns(input: &mut [u8]) {
         let old_col = &mut input[(index * 4)..(index * 4 + 4)];
         old_col.copy_from_slice(new_col);
     }
+    println!("MixColumns: {:x?}", input);
 }
 
 /// 轮密钥加
 fn add_round_key(input: &mut [u8], key: &[u8]) {
+    println!("AddRoundKey: {:x?}", input);
     assert!(input.len() == key.len());
     for index in 0..input.len() {
         input[index] ^= key[index];
     }
+    println!("AddRoundKey: {:x?}", input);
 }
 
 /// 密钥扩展
@@ -92,6 +100,15 @@ fn key_expansion(key: [u8; 16]) -> [[u8; 16]; 11] {
             last_word = &new_key[(ii * 4)..(ii * 4 + 4)];
         }
         round_key[i] = new_key;
+    }
+    println!("KeyExpansion: ");
+    for key in round_key {
+        for i in 0..4 {
+            for ii in 0..4 {
+                print!("{:02x}", key[i * 4 + ii]);
+            }
+            println!("");
+        }
     }
     round_key
 }
