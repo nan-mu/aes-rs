@@ -37,6 +37,7 @@ fn gmul(a: u8, b: u8) -> u8 {
 
 #[test]
 fn test_gmul() {
+    // 同样是AES标准测试向量，用于测试有限域GF(2^8)乘法
     assert_eq!(gmul(0x57, 0x13), 0xfe);
     assert_eq!(gmul(0x13, 0x57), 0xfe);
     assert_eq!(gmul(0x57, 0x83), 0xc1);

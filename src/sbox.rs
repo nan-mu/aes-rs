@@ -40,12 +40,11 @@ const _INV_SBOX: [u8; 256] = [
 
 /// 将字符通过s核映射
 pub fn subcode(input: &mut [u8]) {
-    // use log::debug;
-    println!("encode: {:02x?}", input);
+    // println!("encode: {:02x?}", input);
     for i in 0..input.len() {
         input[i] = SBOX[input[i] as usize];
     }
-    println!("encode: {:02x?}", input);
+    // println!("encode: {:02x?}", input);
 }
 
 /// 从s核映射中解码字符
@@ -56,15 +55,3 @@ pub fn _decode(input: [u8; 4]) -> [u8; 4] {
     }
     output
 }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-
-// #[test]
-// fn test_sbox() {
-//     let encoded = encode(&[0x34, 0x15, 0x0d, 0xa4]);
-//     let decoded = _decode(encoded);
-//     assert_eq!([0x34, 0x15, 0x0d, 0xa4], decoded);
-// }
-// }
