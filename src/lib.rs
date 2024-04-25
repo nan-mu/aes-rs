@@ -102,8 +102,10 @@ fn key_expansion(key: [u8; 16]) -> [[u8; 16]; 11] {
         round_key[i] = new_key;
     }
     println!("KeyExpansion: ");
-    for key in round_key {
+    for index in 0..11 {
+        let key = round_key[index];
         for i in 0..4 {
+            print!("{:02} ", index * 4 + i);
             for ii in 0..4 {
                 print!("{:02x}", key[i * 4 + ii]);
             }
