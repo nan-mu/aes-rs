@@ -34,3 +34,11 @@ fn gmul(a: u8, b: u8) -> u8 {
 
     result
 }
+
+#[test]
+fn test_gmul() {
+    assert_eq!(gmul(0x57, 0x13), 0xfe);
+    assert_eq!(gmul(0x13, 0x57), 0xfe);
+    assert_eq!(gmul(0x57, 0x83), 0xc1);
+    assert_eq!(gmul(0x83, 0x57), 0xc1);
+}
